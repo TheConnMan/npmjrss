@@ -11,10 +11,11 @@ var npmService = new NpmService();
 
 app.get('/package/:name', (req, res) => {
   npmService.getRss(req.params.name).then(rss => {
+    logger.info('Got feed for ' + req.params.name);
     res.set('Content-Type', 'text/xml');
     res.send(rss);
   }).catch(e => {
-    logger.error('Unable to get RSS for ' + name, e);
+    logger.error('Unable to get RSS for ' + req.params.name, e);
     res.sendStatus(500);
   });
 });
