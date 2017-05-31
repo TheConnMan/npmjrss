@@ -7,6 +7,8 @@ var logger = log4js.getLogger();
 
 var app = express();
 
+app.use(express.static('public'));
+
 var npmService = new NpmService();
 
 app.get('/package/:name', (req, res) => {
