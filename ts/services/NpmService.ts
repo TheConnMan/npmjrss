@@ -11,7 +11,8 @@ class NpmService {
     var pkg = await this.getPackage(name);
     var releases = await this.getReleases(name);
     delete releases.latest;
-    return this.formatRss(name, pkg, Object.keys(releases).map(key => releases[key]));
+    var versions = Object.keys(releases).map(key => releases[key]).sort((a, b) => b.date.getTime() - a.date.getTime());
+    return this.formatRss(name, pkg, versions.slice(0, Math.min(versions.length, 10)));
   }
 
   public async getPackage(name: string): Promise<any> {
@@ -47,7 +48,7 @@ class NpmService {
       site_url: 'https://www.npmjs.com/package/' + name,
       image_url: pkg._npmUser ? pkg._npmUser.gravatar : null
     });
-    versions.sort((a, b) => b.date.getTime() - a.date.getTime()).forEach(version => {
+    versions.forEach(version => {
       feed.item(<any> {
         title: name + ':' + version.version,
         guid: name + ':' + version.version,
